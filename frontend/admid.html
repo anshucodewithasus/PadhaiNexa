@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - PadhaiNexa</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #333;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            background: #2455d6;
+            padding: 10px 18px;
+            border-radius: 6px;
+        }
+
+        .container {
+            padding: 30px 7%;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+        .card h3 {
+            color: #2455d6;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .card a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #2455d6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .section-title {
+            margin: 35px 0 18px;
+        }
+
+        .notice {
+            background: white;
+            padding: 20px;
+            border-left: 5px solid #2455d6;
+            border-radius: 10px;
+            line-height: 1.7;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            margin-top: 30px;
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                padding: 25px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h2>PadhaiNexa Admin</h2>
+        <a href="index.html">Logout</a>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <h1>Welcome, Admin!</h1>
+            <p>Manage your PadhaiNexa education platform.</p>
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="card">
+                <h3>👨‍🎓 Students</h3>
+                <p>View and manage registered students.</p>
+                <a href="#">Manage Students →</a>
+            </div>
+
+            <div class="card">
+                <h3>📚 Courses</h3>
+                <p>Add, update and manage online courses.</p>
+                <a href="courses.html">Manage Courses →</a>
+            </div>
+
+            <div class="card">
+                <h3>📄 PDF Materials</h3>
+                <p>Upload and manage educational PDFs.</p>
+                <a href="#">Manage PDFs →</a>
+            </div>
+
+            <div class="card">
+                <h3>🎥 Video Courses</h3>
+                <p>Manage recorded lessons and video content.</p>
+                <a href="#">Manage Videos →</a>
+            </div>
+
+            <div class="card">
+                <h3>💳 Payments</h3>
+                <p>View student orders and payment records.</p>
+                <a href="#">View Payments →</a>
+            </div>
+
+            <div class="card">
+                <h3>📅 Live Classes</h3>
+                <p>Schedule and manage online live classes.</p>
+                <a href="#">Manage Classes →</a>
+            </div>
+
+        </section>
+
+        <h2 class="section-title">Admin Notifications</h2>
+
+        <div class="notice">
+            <strong>Welcome to the Admin Panel!</strong>
+            <p>Your website management dashboard is ready for the next development stage.</p>
+        </div>
+
+    </main>
+
+    <footer>
+        © 2026 PadhaiNexa. Admin Panel.
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Courses - PadhaiNexa</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f8ff;
+            color: #222;
+        }
+
+        header {
+            background: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px #ddd;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        header a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .heading {
+            text-align: center;
+            padding: 50px 15px 25px;
+        }
+
+        .heading h1 {
+            font-size: 35px;
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .heading p {
+            color: #666;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+            padding: 30px 7%;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #ddd;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #2563eb;
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #message {
+            text-align: center;
+            padding: 20px;
+            color: #555;
+        }
+
+        footer {
+            background: #172554;
+            color: white;
+            text-align: center;
+            padding: 22px;
+            margin-top: 40px;
+        }
+
+        @media(max-width: 600px) {
+            .heading h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">PadhaiNexa</div>
+        <a href="index.html">Home</a>
+    </header>
+
+    <section class="heading">
+        <h1>Explore Our Courses</h1>
+        <p>Choose your course and start learning today.</p>
+    </section>
+
+    <div id="message">Loading courses...</div>
+
+    <section class="container" id="courseContainer">
+    </section>
+
+    <footer>
+        © 2026 PadhaiNexa. All Rights Reserved.
+    </footer>
+
+    <script>
+
+        const API = "http://127.0.0.1:5000/api";
+
+        // Load Courses from Database
+        async function loadCourses() {
+
+            const container = document.getElementById("courseContainer");
+            const message = document.getElementById("message");
+
+            try {
+
+                const response = await fetch(`${API}/courses`);
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || "Unable to load courses.");
+                }
+
+                container.innerHTML = "";
+
+                if (data.courses.length === 0) {
+                    message.textContent = "No courses available right now.";
+                    return;
+                }
+
+                message.textContent = "";
+
+                data.courses.forEach(course => {
+
+                    const card = document.createElement("div");
+                    card.className = "card";
+
+                    const title = document.createElement("h2");
+                    title.textContent = course.title;
+
+                    const description = document.createElement("p");
+                    description.textContent = course.description || "Start learning today.";
+
+                    const price = document.createElement("div");
+                    price.className = "price";
+                    price.textContent = `₹${course.price}`;
+
+                    const button = document.createElement("button");
+                    button.className = "btn";
+                    button.textContent = "Buy Now";
+
+                    button.addEventListener("click", () => {
+                        buyCourse(course.id, button);
+                    });
+
+                    card.appendChild(title);
+                    card.appendChild(description);
+                    card.appendChild(price);
+                    card.appendChild(button);
+
+                    container.appendChild(card);
+
+                });
+
+            } catch (error) {
+
+                console.error("Course Loading Error:", error);
+                message.textContent = "Unable to load courses. Please check your backend server.";
+
+            }
+        }
+
+
+        // Buy Course - Login Check
+        async function buyCourse(courseId, button) {
+
+            button.disabled = true;
+            button.textContent = "Checking...";
+
+            try {
+
+                const response = await fetch(`${API}/me`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (response.status === 401) {
+                    alert("Please login first to purchase this course.");
+
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error("Login verification failed.");
+                }
+
+                alert(
+                    "Login successful! Course ID: " +
+                    courseId +
+                    ". Payment system will be connected next."
+                );
+
+            } catch (error) {
+
+                console.error("Purchase Check Error:", error);
+                alert("Unable to verify login. Please try again.");
+
+            } finally {
+
+                button.disabled = false;
+                button.textContent = "Buy Now";
+
+            }
+        }
+
+        // Start
+        loadCourses();
+
+    </script>
+
+</body>
+</html>
