@@ -233,7 +233,7 @@
         async function checkLogin() {
             try {
                 const response = await fetch(
-                    "http://127.0.0.1:5000/api/me",
+                    "https://padhainexa.onrender.com/api/me",
                     {
                         method: "GET",
                         credentials: "include"
@@ -286,7 +286,7 @@
         async function logoutStudent() {
             try {
                 const response = await fetch(
-                    "http://127.0.0.1:5000/api/logout",
+                    "https://padhainexa.onrender.com/api/logout",
                     {
                         method: "POST",
                         credentials: "include"

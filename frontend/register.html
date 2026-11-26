@@ -204,8 +204,9 @@
             registerButton.textContent = "Please wait...";
 
             try {
-                const response = await fetch("http://localhost:5000/api/register", {
+                const response = await fetch("https://padhainexa.onrender.com/api/register", {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json"
                     },
