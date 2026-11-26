@@ -303,6 +303,76 @@ router.get("/my-courses", (req, res) => {
     );
 });
 
+// ===============================
+// 7. GET ALL PDFs
+// ===============================
+router.get("/pdfs", (req, res) => {
+    db.all(
+        `SELECT id, title, description, price
+         FROM pdfs
+         ORDER BY id DESC`,
+        [],
+        (error, pdfs) => {
+            if (error) {
+                console.error("PDF Error:", error);
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Unable to fetch PDFs."
+                });
+            }
+
+            res.json({
+                success: true,
+                pdfs: pdfs
+            });
+        }
+    );
+});
+
+
+// ===============================
+// 8. GET STUDENT PURCHASED PDFs
+// ===============================
+router.get("/my-pdfs", (req, res) => {
+    if (!req.session.student) {
+        return res.status(401).json({
+            success: false,
+            message: "Please login first."
+        });
+    }
+
+    const studentId = req.session.student.id;
+
+    db.all(
+        `SELECT
+            pdfs.id,
+            pdfs.title,
+            pdfs.description,
+            pdfs.price,
+            pdf_purchases.purchased_at
+         FROM pdf_purchases
+         JOIN pdfs ON pdfs.id = pdf_purchases.pdf_id
+         WHERE pdf_purchases.student_id = ?
+         AND pdf_purchases.payment_status = 'paid'`,
+        [studentId],
+        (error, pdfs) => {
+            if (error) {
+                console.error("My PDFs Error:", error);
+
+                return res.status(500).json({
+                    success: false,
+                    message: "Unable to fetch your PDFs."
+                });
+            }
+
+            res.json({
+                success: true,
+                pdfs: pdfs
+            });
+        }
+    );
+});
 
 // ===============================
 // EXPORT ROUTER

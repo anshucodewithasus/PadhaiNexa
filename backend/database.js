@@ -50,6 +50,31 @@ db.serialize(() => {
             FOREIGN KEY (course_id) REFERENCES courses(id)
         )
     `);
+        // PDFs Table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS pdfs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            price INTEGER NOT NULL DEFAULT 0,
+            file_path TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    // Student PDF Purchases Table
+    db.run(`
+        CREATE TABLE IF NOT EXISTS pdf_purchases (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            pdf_id INTEGER NOT NULL,
+            payment_status TEXT NOT NULL DEFAULT 'pending',
+            purchased_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(student_id, pdf_id),
+            FOREIGN KEY (student_id) REFERENCES students(id),
+            FOREIGN KEY (pdf_id) REFERENCES pdfs(id)
+        )
+    `);
 
     // Sample Courses
     const courses = [

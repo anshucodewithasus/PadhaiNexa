@@ -241,7 +241,7 @@
 
                 <div class="card">
                     <h3>My PDFs</h3>
-                    <p>0</p>
+<p id="pdfCount">0</p>
                 </div>
 
                 <div class="card">
@@ -273,6 +273,15 @@
                     <p class="empty-message">Loading courses...</p>
                 </div>
             </div>
+            <div class="courses-section">
+    <h2>My Purchased PDFs</h2>
+
+    <div id="myPDFsList">
+        <p class="empty-message">
+            No PDFs purchased yet.
+        </p>
+    </div>
+</div>
 
         </section>
 
@@ -315,6 +324,8 @@
             document.getElementById("dashboardContent").hidden = false;
 
             await loadMyCourses();
+            await loadMyPDFs();
+        
 
         } catch (error) {
             console.error("Dashboard error:", error);
@@ -374,6 +385,59 @@
         } catch (error) {
             console.error("My Courses error:", error);
             list.textContent = "Unable to load your courses. Please try again.";
+        }
+    }
+        async function loadMyPDFs() {
+        const list = document.getElementById("myPDFsList");
+        const count = document.getElementById("pdfCount");
+
+        try {
+            const response = await fetch(
+                "https://padhainexa.onrender.com/api/my-pdfs",
+                {
+                    method: "GET",
+                    credentials: "include"
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || "Unable to load PDFs.");
+            }
+
+            const pdfs = data.pdfs || [];
+
+            count.textContent = pdfs.length;
+
+            if (pdfs.length === 0) {
+                list.innerHTML =
+                    '<p class="empty-message">No PDFs purchased yet.</p>';
+                return;
+            }
+
+            list.replaceChildren();
+
+            pdfs.forEach(pdf => {
+                const item = document.createElement("div");
+                item.className = "course-item";
+
+                const title = document.createElement("h3");
+                title.textContent = pdf.title;
+
+                const description = document.createElement("p");
+                description.textContent = pdf.description || "";
+
+                const price = document.createElement("p");
+                price.textContent = "₹" + pdf.price;
+
+                item.append(title, description, price);
+                list.appendChild(item);
+            });
+
+        } catch (error) {
+            console.error("My PDFs error:", error);
+            list.textContent = "Unable to load your PDFs.";
         }
     }
 
