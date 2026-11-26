@@ -26,6 +26,7 @@
 
         .sidebar {
             width: 250px;
+            flex-shrink: 0;
             background: #14213d;
             color: white;
             padding: 25px 15px;
@@ -105,7 +106,7 @@
             margin-bottom: 30px;
         }
 
-        .card {
+        .card, .profile, .courses-section {
             background: white;
             padding: 25px;
             border-radius: 10px;
@@ -125,13 +126,10 @@
         }
 
         .profile {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 12px #0000000d;
+            margin-bottom: 30px;
         }
 
-        .profile h2 {
+        .profile h2, .courses-section h2 {
             margin-bottom: 20px;
             color: #14213d;
         }
@@ -139,12 +137,41 @@
         .profile p {
             margin: 15px 0;
             color: #4c5665;
+            overflow-wrap: anywhere;
         }
 
         .profile strong {
             display: inline-block;
             width: 100px;
             color: #14213d;
+        }
+
+        .course-item {
+            border: 1px solid #e2e6ef;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .course-item h3 {
+            color: #14213d;
+            margin-bottom: 8px;
+        }
+
+        .course-item p {
+            color: #657080;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .course-price {
+            color: #16803c;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            color: #657080;
+            line-height: 1.6;
         }
 
         @media (max-width: 700px) {
@@ -209,7 +236,7 @@
 
                 <div class="card">
                     <h3>My Courses</h3>
-                    <p>0</p>
+                    <p id="courseCount">0</p>
                 </div>
 
                 <div class="card">
@@ -227,20 +254,24 @@
             <div class="profile">
                 <h2>My Profile</h2>
 
-                <p>
-                    <strong>Name:</strong>
+                <p><strong>Name:</strong>
                     <span id="studentName"></span>
                 </p>
 
-                <p>
-                    <strong>Email:</strong>
+                <p><strong>Email:</strong>
                     <span id="studentEmail"></span>
                 </p>
 
-                <p>
-                    <strong>Mobile:</strong>
+                <p><strong>Mobile:</strong>
                     <span id="studentMobile"></span>
                 </p>
+            </div>
+
+            <div class="courses-section">
+                <h2>My Purchased Courses</h2>
+                <div id="myCoursesList">
+                    <p class="empty-message">Loading courses...</p>
+                </div>
             </div>
 
         </section>
@@ -283,9 +314,66 @@
 
             document.getElementById("dashboardContent").hidden = false;
 
+            await loadMyCourses();
+
         } catch (error) {
             console.error("Dashboard error:", error);
             alert("Server connection failed. Please try again.");
+        }
+    }
+
+    async function loadMyCourses() {
+        const list = document.getElementById("myCoursesList");
+
+        try {
+            const response = await fetch(
+                "https://padhainexa.onrender.com/api/my-courses",
+                {
+                    method: "GET",
+                    credentials: "include"
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || "Unable to load courses.");
+            }
+
+            const courses = data.courses || [];
+
+            document.getElementById("courseCount").textContent =
+                courses.length;
+
+            if (courses.length === 0) {
+                list.innerHTML =
+                    '<p class="empty-message">You have not purchased any courses yet. Explore our courses to start learning.</p>';
+                return;
+            }
+
+            list.replaceChildren();
+
+            courses.forEach(course => {
+                const item = document.createElement("div");
+                item.className = "course-item";
+
+                const title = document.createElement("h3");
+                title.textContent = course.title;
+
+                const description = document.createElement("p");
+                description.textContent = course.description || "";
+
+                const price = document.createElement("p");
+                price.className = "course-price";
+                price.textContent = "₹" + course.price;
+
+                item.append(title, description, price);
+                list.appendChild(item);
+            });
+
+        } catch (error) {
+            console.error("My Courses error:", error);
+            list.textContent = "Unable to load your courses. Please try again.";
         }
     }
 
