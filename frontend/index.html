@@ -139,8 +139,27 @@
             background: #14213d;
             color: white;
             text-align: center;
-            padding: 20px;
+            padding: 25px 15px;
             margin-top: 30px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 22px;
+            margin-bottom: 18px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #fca311;
+            text-decoration: underline;
         }
 
         @media (max-width: 600px) {
@@ -222,7 +241,15 @@
     </section>
 
     <footer>
+
+        <div class="footer-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms.html">Terms & Conditions</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+
         <p>© 2026 PadhaiNexa. All Rights Reserved.</p>
+
     </footer>
 
     <script>
